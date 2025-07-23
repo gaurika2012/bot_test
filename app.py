@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return "🤖 Chatbot is running! Send a POST request to /chat"
+
 @app.route("/chat", methods=["POST"])
 def chat():
     user_message = request.json.get("message")
