@@ -1,44 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Chat with Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; margin: 40px; }
-    #chat { border: 1px solid #ccc; padding: 10px; width: 400px; height: 
-300px; overflow-y: auto; margin-bottom: 10px; }
-    .bot { color: blue; }
-    .user { color: green; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #4a90e2;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    #chat {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 20px;
+      max-width: 70%;
+      line-height: 1.4;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #dcf8c6;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background-color: #e4e6eb;
+    }
+
+    footer {
+      display: flex;
+      padding: 1rem;
+      background: white;
+      border-top: 1px solid #ccc;
+    }
+
+    input {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    button {
+      padding: 0.75rem 1rem;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #357ABD;
+    }
   </style>
 </head>
 <body>
-  <h2>🤖 Talk to Your Bot</h2>
+  <header>🤖 Chat with Your Bot</header>
+
   <div id="chat"></div>
-  <input type="text" id="messageInput" placeholder="Type a message..." 
-style="width: 300px;" />
-  <button onclick="sendMessage()">Send</button>
+
+  <footer>
+    <input type="text" id="messageInput" placeholder="Type your message..." onkeydown="if(event.key === 'Enter') sendMessage()" />
+    <button onclick="sendMessage()">Send</button>
+  </footer>
 
   <script>
     async function sendMessage() {
       const input = document.getElementById("messageInput");
-      const message = input.value;
+      const message = input.value.trim();
+      if (!message) return;
+
       input.value = "";
 
-      if (!message.trim()) return;
-
       const chatBox = document.getElementById("chat");
-      chatBox.innerHTML += `<div class="user"><strong>You:</strong> 
-${message}</div>`;
 
-      const res = await fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-      });
+      chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
 
-      const data = await res.json();
-      chatBox.innerHTML += `<div class="bot"><strong>Bot:</strong> 
-${data.reply}</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await res.json();
+
+        chatBox.innerHTML += `<div class="message bot"><strong>Bot:</strong> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (err) {
+        chatBox.innerHTML += `<div class="message bot"><strong>Bot:</strong> Error connecting to server.</div>`;
+      }
     }
   </script>
 </body>
