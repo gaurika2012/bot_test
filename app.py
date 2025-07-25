@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return "Your bot is live! Try sending a POST request to /chat"
+    return render_template("index.html")  # <- You need this file too
 
 @app.route('/chat', methods=['POST'])
 def chat():
