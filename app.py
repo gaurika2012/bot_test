@@ -1,36 +1,17 @@
-from flask import Flask, request, jsonify, render_template
-import openai
-import os
+from flask import Flask, request, jsonify
+from intents import TRAVEL_INTENTS  # Or define directly in app.py
 
 app = Flask(__name__)
 
-# Load OpenAI API key from environment
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-@app.route("/")
-def home():
-    return render_template("index.html")  # Shows your chatbot UI
-
-@app.route("/chat", methods=["POST"])
+@app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get("message")
+    data = request.get_json()
+    user_message = data.get("message", "").lower()
     
-    # Send to OpenAI GPT
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Or gpt-4 if you have access
-            messages=[
-                {"role": "system", "content": "You are a helpful chatbot."},
-                {"role": "user", "content": user_message}
-            ]
-        )
-        reply = response["choices"][0]["message"]["content"]
-    except Exception as e:
-        reply = f"Error: {str(e)}"
+    # Match known phrases
+    for key_phrase, response in TRAVEL_INTENTS.items():
+        if key_phrase in user_message:
+            return jsonify({"reply": response})
 
-    return jsonify({"reply": reply})
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
+    # Default response
+    return jsonify({"reply": "I'm not sure, but I can help with common travel questions. Try asking about destinations, routes, or tips."})
