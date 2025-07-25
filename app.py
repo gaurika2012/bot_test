@@ -1,18 +1,10 @@
-from flask import Flask, render_template
+import difflib
+from intents import TRAVEL_INTENTS
 
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("index.html")  # <- You need this file too
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    data = request.get_json()
-    message = data.get("message", "")
-    return jsonify({"response": f"You said: {message}"})
-
-if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+def get_intent(user_input):
+    user_input = user_input.lower()
+    for intent, data in TRAVEL_INTENTS.items():
+        matches = difflib.get_close_matches(user_input, data["examples"], n=1, cutoff=0.5)
+        if matches:
+            return data["response"]
+    return "Sorry, I didn’t quite catch that. Can you rephrase?"
