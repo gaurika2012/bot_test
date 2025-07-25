@@ -15,3 +15,10 @@ def chat():
 
     # Default response
     return jsonify({"reply": "I'm not sure, but I can help with common travel questions. Try asking about destinations, routes, or tips."})
+
+import os
+
+port = int(os.environ.get("PORT", 5000))
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=port)
