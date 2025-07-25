@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import difflib
 from intents import TRAVEL_INTENTS
 
@@ -14,7 +14,7 @@ def get_intent(user_input):
 
 @app.route('/')
 def home():
-    return "🌍 TravelBot is running! Try POSTing to /chat"
+    return render_template("index.html")  # Show the chatbot UI
 
 @app.route('/chat', methods=['POST'])
 def chat():
