@@ -1,15 +1,23 @@
 TRAVEL_INTENTS = {
-    "greet": {
-        "examples": ["hi", "hello", "hey"],
-        "response": "Hi there! How can I help you with your travel today?"
+    "weather": {
+        "examples": ["what’s the weather", "is it hot", "weather in paris", "do I need an umbrella"],
+        "response": "Let me check the current weather for you...",
+        "action": "get_weather"
     },
-    "book_flight": {
-        "examples": ["I want to book a flight", "book me a flight", "need to fly"],
-        "response": "Sure! Where are you flying from and to?"
+    "hotels": {
+        "examples": ["show me hotels", "where can I stay", "recommend hotels"],
+        "response": "Here are some great hotel options!",
+        "action": "show_hotels"
     },
-    "cancel_flight": {
-        "examples": ["cancel my flight", "I need to cancel", "how to cancel trip"],
-        "response": "No problem. Can you tell me your booking ID?"
+    "time": {
+        "examples": ["what time is it in paris", "local time", "current time paris"],
+        "response": "Sure, let me check the time in Paris...",
+        "action": "get_local_time"
     },
-    # Add more intents like "suggest destinations", "packing list", etc.
+    "recommendation": {
+        "examples": ["where should I go", "suggest travel destinations", "best places to visit"],
+        "response": "Here are some amazing travel destinations you might like:",
+        "action": "suggest_destinations"
+    }
 }
+
